@@ -120,7 +120,6 @@ stcm2l_file::~stcm2l_file()
 
 void stcm2l_file::cleanup()
 {
-    
     delete startdata;
     
     list<action*>::iterator actit;
@@ -242,7 +241,11 @@ int stcm2l_file::make_entities()
             if(te==NULL){
                 perror("new textentity\n");
             }
-            it = te->set(it, &actions);
+            it = te->set_convo(it, &actions);
+            texts.push_back(te);
+        }else if(opcode == 0xe7){
+            text_entity* te = new text_entity;
+            it = te->set_answer(it);
             texts.push_back(te);
         }
     }
@@ -288,13 +291,32 @@ void stcm2l_file::selected_text(int index)
         gtk_entry_set_text(namebox, "");
         
     GtkTreeIter tree_it;
+
+    GtkTreeViewColumn* treecol = gtk_tree_view_get_column(edit_tree, 0);
+    GList* cells = gtk_cell_layout_get_cells(GTK_CELL_LAYOUT(treecol));
+    if(cells==NULL){
+        perror("cells==NULL");
+    }
+    GtkCellRenderer* cell_rend = (GtkCellRenderer*)cells->data;
+    g_list_free(cells);
+    if(texts[index]->is_answer){
+        g_object_set(G_OBJECT(cell_rend), "foreground", "blue", NULL);
+    }else{
+       g_object_set(G_OBJECT(cell_rend), "foreground", NULL, NULL);;
+    }
+    
+    
     int linecount = texts[index]->get_linecount();
+    
     clear_editstore();
     for(int i=0; i<linecount; ++i){
+        int width;
         gchar* line = texts[index]->get_line_utf8(i);
+        
         gtk_list_store_append(editstore, &tree_it);
         gtk_list_store_set(editstore, &tree_it, 0, line, -1);
     }
+    
 }
 
 void stcm2l_file::refresh_editstore()

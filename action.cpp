@@ -38,6 +38,7 @@ action::action(){
     extra_data_len = 0;
     addr = 0;
     extra_data = NULL;
+    localpcount=0;
 }
 
 action::~action(){
@@ -98,6 +99,7 @@ int action::read_from(FILE* f)
         if( ((p->val1>>24) & 0xff)!=0xff && 
               p->val1 > old_addr && p->val1 < old_addr+length){
             p->type = PTYPE_LOCALP;
+            localpcount++;
             p->relative_addr = p->val1 - old_addr;
         }else if(p->val1 == 0xffffff41){
             global_calls[p->val2].push_back(p);
@@ -137,7 +139,7 @@ void action::init_op(int special, int newopcode, int newparamcount)
     }
 }
 
-int action::set_string(wchar_t* str, int param)
+int action::set_string(char* str, int param)
 {
     if(param>paramcount) return 1;
     int reallen = strlen((char*)str)+1, len, *intdata;
@@ -151,11 +153,11 @@ int action::set_string(wchar_t* str, int param)
     if(param==0){
         params[param]->relative_addr = 16+paramcount*12;;
     }else{
-        perror("set_string: param!=0 not yet implemented\n");
+        fprintf(stderr,"set_string: param!=0 not yet implemented\n");
         return 1;
     }
-    if(paramcount>1){
-        perror("set_string: paramcount > 1 not yet implemented");
+    if(localpcount>1){
+        fprintf(stderr,"set_string: localpcount > 1 not yet implemented\n");
         return 1;
     }
     
@@ -169,6 +171,7 @@ int action::set_string(wchar_t* str, int param)
         new_extra_start_idx = 0;
     }else{
         params[param]->type = PTYPE_LOCALP;
+        localpcount++;
         new_extra_start_idx = extra_data_len;
         extra_data_len += len+16;
     }
@@ -188,7 +191,7 @@ int action::set_string(wchar_t* str, int param)
     return 0;
 }
 
-int action::get_string_from_param(wchar_t** target, int param)
+int action::get_string_from_param(char** target, int param)
 {
     int offset = params[param]->relative_addr - 16-paramcount*12;
     uint8_t* stringdata = &extra_data[offset];
@@ -196,7 +199,7 @@ int action::get_string_from_param(wchar_t** target, int param)
     
     int len = intdata[3];
     
-    *target = (wchar_t*)malloc(len);
+    *target = (char*)malloc(len);
     if(*target==NULL){
         perror("get_string_from_param malloc failed");
     }

@@ -49,7 +49,7 @@ using namespace std;
 class action
 {
   private:
-    int length, paramcount, old_addr, addr;
+    int length, paramcount, old_addr, addr, localpcount;
     uint32_t opcode, is_local_call;
     uint8_t* extra_data, extra_data_len;
     vector<parameter*> params;
@@ -64,8 +64,8 @@ class action
     int read_from(FILE* f);
 
     void init_op(int special, int newopcode, int newparamcount);
-    int set_string(wchar_t* str, int param);
-    int get_string_from_param(wchar_t** target, int param);
+    int set_string(char* str, int param);
+    int get_string_from_param(char** target, int param);
     
     int get_length(){
         return length;

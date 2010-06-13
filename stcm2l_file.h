@@ -40,6 +40,8 @@ or implied, of Matthias Lanzinger.
 #include "export_data.h"
 #include "text_entity.h"
 
+#define TEXTWIDTH_THRESHOLD     450
+
 using namespace std;
 
 class stcm2l_file
@@ -51,6 +53,7 @@ class stcm2l_file
     vector<text_entity*> texts;
     GtkListStore* liststore, *editstore;
     GtkEntry* namebox;
+    GtkTreeView* edit_tree;
     FILE* inf;
     int inflen, start, start_exports, exportcount, current_text;
     int cur_line;
@@ -107,13 +110,18 @@ class stcm2l_file
         editstore=es;
     }
     void add_line(){
-        texts[current_text]->add_line();
+        if(!texts[current_text]->is_answer)
+            texts[current_text]->add_line();
     }
     void set_cur_line(int n){
         cur_line = n;
     }
     void remove_line(){
-        texts[current_text]->remove(cur_line);
+        if(!texts[current_text]->is_answer)
+            texts[current_text]->remove(cur_line);
+    }
+    void set_edit_tree(GtkTreeView* tv){
+        edit_tree=tv;
     }
 };
 

@@ -179,6 +179,7 @@ int main(int argc, char** argv)
     GtkWidget* window;
     GtkListStore* ls, *es;
     GtkEntry* nb;
+    GtkTreeView* tv1;
     GError* error = NULL;
     static stcm2l_file file;
     
@@ -196,14 +197,15 @@ int main(int argc, char** argv)
     ls = (GtkListStore*)gtk_builder_get_object(builder, "liststore1");
     es = (GtkListStore*)gtk_builder_get_object(builder, "editstore");
     nb = (GtkEntry*)gtk_builder_get_object(builder, "name");
+    tv1 = (GtkTreeView*)gtk_builder_get_object(builder, "treeview1");
     file.set_liststore(ls);
     file.set_namebox(nb);
     file.set_editstore(es);
+    file.set_edit_tree(tv1);
     
     gtk_builder_connect_signals(builder, &file);
     g_object_unref( G_OBJECT(builder) );
     gtk_widget_show(window);
     gtk_main();
-
     return 0;    
 }

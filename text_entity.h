@@ -52,10 +52,14 @@ class text_entity
     list<action*> *actions;
     
   public:
+    bool is_answer, is_highlighted;
+    
+    
     text_entity();
     ~text_entity();
     
-    action_it set(action_it it, list<action*> *actions);
+    action_it set_convo(action_it it, list<action*> *actions);
+    action_it set_answer(action_it it);
     
     void reinsert_lines();
     int add_line();

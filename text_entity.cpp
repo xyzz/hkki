@@ -33,6 +33,7 @@ text_entity::text_entity()
     name_utf8 = NULL;
     nameaction = NULL;
     linecount = 0;
+    is_answer = false;
 }
 
 text_entity::~text_entity()
@@ -45,7 +46,7 @@ text_entity::~text_entity()
     line_actions.clear();
 }
 
-action_it text_entity::set(action_it it, list<action*> *actions)
+action_it text_entity::set_convo(action_it it, list<action*> *actions)
 {
     this->actions = actions;
     uint32_t opcode = (*it)->get_opcode();
@@ -54,14 +55,14 @@ action_it text_entity::set(action_it it, list<action*> *actions)
         
         if(opcode==0xd4){
             if(name_utf8==NULL){
-                wchar_t* name;
+                char* name;
                 int len = (*it)->get_string_from_param(&name, 0);
                 name_utf8 = g_convert((char*)name, len, "UTF-8",
                                       "shift_JIS", NULL, NULL, NULL);
                 nameaction = *it;
             }
         }else{
-            wchar_t* tmp;
+            char* tmp;
             gchar* tmp_utf8;
             int len = (*it)->get_string_from_param(&tmp,0);            
             tmp_utf8 = g_convert((char*)tmp, len, "UTF-8", "shift_JIS",
@@ -78,8 +79,26 @@ action_it text_entity::set(action_it it, list<action*> *actions)
             break;
         opcode = (*it)->get_opcode();
     }
+    it--;
     return it;
 }
+
+
+action_it text_entity::set_answer(action_it it)
+{
+    char *tmp;
+    gchar* tmp_utf8;
+    int len = (*it)->get_string_from_param(&tmp, 0);
+    tmp_utf8 = g_convert((char*)tmp, len, "UTF-8", "shift_JIS",
+                                NULL, NULL, NULL);
+    lines_utf8.push_back(tmp_utf8);
+    line_actions.push_back(*it);
+    linecount = 1;
+    is_answer = true;
+
+    return it;
+}
+
 
 void text_entity::set_line_utf8(int index, gchar* new_line)
 {
@@ -98,15 +117,15 @@ void text_entity::reinsert_lines()
 {
     if(name_utf8!=NULL){
         int len = strlen(name_utf8);
-        wchar_t* name = (wchar_t*)g_convert(name_utf8, len, "shift_JIS", 
+        char* name = (char*)g_convert(name_utf8, len, "shift_JIS", 
                         "UTF-8", NULL, NULL, NULL);
         nameaction->set_string(name, 0);
     }
     
     for(int i=0; i<linecount; ++i){
-        wchar_t* line;
+        char* line;
         int len = strlen(lines_utf8[i]);
-        line = (wchar_t*)g_convert(lines_utf8[i], len, "shift_JIS", "UTF-8",
+        line = (char*)g_convert(lines_utf8[i], len, "shift_JIS", "UTF-8",
                          NULL, NULL, NULL);
         line_actions[i]->set_string(line,0);
     }

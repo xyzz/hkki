@@ -2,6 +2,20 @@
 <interface>
   <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy project-wide -->
+  <object class="GtkListStore" id="liststore1">
+    <columns>
+      <!-- column-name ID -->
+      <column type="gint"/>
+      <!-- column-name Text -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="editstore">
+    <columns>
+      <!-- column-name Line -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
   <object class="GtkWindow" id="window1">
     <property name="title" translatable="yes">Hakkuoki Script Editor</property>
     <property name="window_position">center</property>
@@ -252,20 +266,6 @@
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkListStore" id="liststore1">
-    <columns>
-      <!-- column-name ID -->
-      <column type="gint"/>
-      <!-- column-name Text -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
-  <object class="GtkListStore" id="editstore">
-    <columns>
-      <!-- column-name Line -->
-      <column type="gchararray"/>
-    </columns>
   </object>
   <object class="GtkImage" id="add_image">
     <property name="visible">True</property>
