@@ -60,6 +60,7 @@ on_open_button_clicked(GtkButton* button,
 {
     stcm2l_file* file = (stcm2l_file*)user_data;
     GtkWidget *dialog;
+    char *filename = NULL;
     
     dialog = gtk_file_chooser_dialog_new ("Open File",
 				      NULL,
@@ -68,7 +69,6 @@ on_open_button_clicked(GtkButton* button,
 				      GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
 				      NULL);
     if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT){
-        char *filename;
         filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
         
         if(file->is_open()){
@@ -76,9 +76,11 @@ on_open_button_clicked(GtkButton* button,
             file->clear_liststore();
             file->cleanup();
         }
+        
+        if(file->load_file(filename)){
+            goto end_open;
+        }
         printf("opened %s\n", filename);
-        file->load_file(filename, 0x21C);
-        g_free (filename);
          
         file->read_start();
         file->read_exports();
@@ -87,6 +89,8 @@ on_open_button_clicked(GtkButton* button,
         file->make_entities();
         file->fill_liststore();
     }
+end_open:
+    g_free (filename);
     gtk_widget_destroy (dialog);
 }
 

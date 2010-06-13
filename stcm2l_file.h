@@ -38,12 +38,14 @@ class stcm2l_file
     
     int recover_global_calls(int startaddr);
     
+    int find_start();
+    
   public:
     stcm2l_file();
     ~stcm2l_file();
     void cleanup();
     
-    int load_file(const char* infname, int start);
+    int load_file(const char* infname);
     int read_start();
     int read_exports();
     int read_actions();

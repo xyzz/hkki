@@ -62,6 +62,18 @@ int stcm2l_file::recover_global_calls(int startaddr)
     return 0;
 }
     
+int stcm2l_file::find_start()
+{
+    char tmp_buf[2000];
+    fread(tmp_buf, 1, 2000, inf);
+    
+    for(int i=0; i<2000; i+=4){
+        if(!strcmp(&tmp_buf[i], "CODE_START_") )
+            return i+0x0c;
+    }
+    return 0;
+}
+    
 stcm2l_file::stcm2l_file()
 {
     start = 0;
@@ -112,9 +124,8 @@ void stcm2l_file::cleanup()
     inf=NULL;
 }
 
-int stcm2l_file::load_file(const char* infname, int start)
+int stcm2l_file::load_file(const char* infname)
 {
-    this->start = start;
     inf = fopen(infname, "rb");
     if(inf==NULL){
         perror("inf:");
@@ -123,6 +134,16 @@ int stcm2l_file::load_file(const char* infname, int start)
     fseek(inf, 0, SEEK_END);
     inflen = ftell(inf);
     fseek(inf, 0, SEEK_SET);
+    
+    int st = find_start();
+    fseek(inf, 0, SEEK_SET);
+    if(st==0){
+        fprintf(stderr,"Not a valid file\n");
+        cleanup();
+        return 1;
+    }
+    start = st;
+    printf("Found start at 0x%X\n", start);
     return 0;
 }
 
