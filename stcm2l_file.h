@@ -93,8 +93,6 @@ class stcm2l_file
     
     int write(const char* ofname);
     
-    void fun();
-    
     int is_open(){
         return inf!=NULL;
     }

@@ -347,34 +347,3 @@ int stcm2l_file::write(const char* ofname)
     return 0;
 }
     
-void stcm2l_file::fun()
-{
-    list<action*>::iterator it;
-    int cur=0;
-    wchar_t* insert = L"This line is #Color[1]new#Color[7] :D";
-    wchar_t* insertname = L"n#Color[2]ew#Color[7]bx";
-        
-    for(it=actions.begin(); it!=actions.end(); ++it){
-        if(cur==496){
-            action* a0 = new action;
-            a0->init_op(0,0xd4,1);
-            a0->set_string(insertname,0);
-            
-            action* a = new action;
-            a->init_op(0, 0xd2, 1);
-            a->set_string(insert, 0);
-            
-            action* a1 = new action;
-            a1->init_op(0,0xd3,0);
-            
-            actions.insert(it, a1);
-            actions.insert(it, a0);
-            actions.insert(it, a);
-                
-            break;
-        }
-
-        cur++;
-    }
-    printf("Have %d actions\n", actions.size());
-}
