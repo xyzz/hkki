@@ -59,6 +59,32 @@ on_save_button_clicked(GtkButton*   button,
 
 
 extern "C" G_MODULE_EXPORT void
+on_export_text_button_clicked(GtkButton*   button,
+                       gpointer     user_data)
+{
+    stcm2l_file* file = (stcm2l_file*)user_data;
+    GtkWidget *dialog;
+    
+    if(!file->is_open())
+        return;
+    
+    dialog = gtk_file_chooser_dialog_new ("Save File",
+				      NULL,
+				      GTK_FILE_CHOOSER_ACTION_SAVE,
+				      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+				      GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+				      NULL);
+    if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT){
+        char *filename;
+        filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
+        
+        file->export_plaintext(filename);
+        g_free(filename);
+    }
+    gtk_widget_destroy (dialog);
+}
+
+extern "C" G_MODULE_EXPORT void
 on_line_edited(GtkCellRendererText *renderer,
                gchar               *path,
                gchar               *new_text,

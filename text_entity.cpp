@@ -168,3 +168,14 @@ void text_entity::remove(int n)
     
     actions->remove(to_remove);
 }
+
+void text_entity::write_plaintext_to(FILE* f)
+{
+    if(name_utf8!=NULL){
+        fprintf(f,"said by: %s\n",name_utf8);
+    }
+    for(int i=0; i<linecount; ++i){
+        fprintf(f, "%s\n", lines_utf8[i]);
+    }
+}
+

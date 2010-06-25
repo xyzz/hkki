@@ -95,6 +95,7 @@ class stcm2l_file
     void sync_texts();
     
     int write(const char* ofname);
+    int export_plaintext(const char* ofname);
     
     int is_open(){
         return inf!=NULL;

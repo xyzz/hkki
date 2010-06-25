@@ -82,6 +82,7 @@ class text_entity
     }
     
     void set_line_utf8(int index, gchar* new_line);
+    void write_plaintext_to(FILE* f);
 };
 
 

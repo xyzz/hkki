@@ -369,3 +369,22 @@ int stcm2l_file::write(const char* ofname)
     return 0;
 }
     
+int stcm2l_file::export_plaintext(const char* ofname)
+{
+    vector<text_entity*>::iterator it;
+    int i=0;
+    FILE* of = fopen(ofname, "w");
+    if(of==NULL){
+        perror("exporting texts: ");
+        return 1;
+    }
+
+    for(it=texts.begin(); it!=texts.end(); ++it){
+        fprintf(of, "Box %d\n", ++i);
+        (*it)->write_plaintext_to(of);
+        fprintf(of,"\n");
+    }
+    
+    fclose(of);
+    return 0;
+}
