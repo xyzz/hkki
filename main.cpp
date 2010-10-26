@@ -196,7 +196,8 @@ on_add_button_clicked(GtkButton* button,
                       gpointer user_data)
 {
     stcm2l_file* file = (stcm2l_file*)user_data;
-    file->clear_liststore();
+    /* XXX Implement */
+    file->refresh_liststore();
 }
 
 int main(int argc, char** argv)
