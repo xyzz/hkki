@@ -236,7 +236,8 @@ int stcm2l_file::make_entities()
     list<action*>::iterator it;
     for(it=actions.begin(); it!=actions.end(); ++it){
         uint32_t opcode = (*it)->get_opcode();
-        if(opcode == 0xd2 || opcode == 0xd4){
+        if( (opcode == 0xd2 || opcode == 0xd4) 
+                && (*it)->has_extra_data()){
             text_entity* te = new text_entity;
             if(te==NULL){
                 perror("new textentity\n");

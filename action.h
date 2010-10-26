@@ -82,6 +82,10 @@ class action
     void set_addr(int newaddr){
         addr = newaddr;
     }
+    
+    int has_extra_data(){
+        return extra_data != NULL;
+    }
 };
 
 #endif /*_ACTION_H */
