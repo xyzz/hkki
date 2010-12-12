@@ -211,7 +211,6 @@ int stcm2l_file::read_actions()
     fseek(inf, start, SEEK_SET);
     do{
         action* a = new action;
-        
 
         action_length = a->read_from(inf);
         if(cur_export < exportcount && 
@@ -236,7 +235,7 @@ int stcm2l_file::make_entities()
     list<action*>::iterator it;
     for(it=actions.begin(); it!=actions.end(); ++it){
         uint32_t opcode = (*it)->get_opcode();
-        if( (opcode == 0xd2 || opcode == 0xd4) 
+        if( ( opcode == ACTION_NAME || opcode == ACTION_TEXT ) 
                 && (*it)->has_extra_data()){
             text_entity* te = new text_entity;
             if(te==NULL){
@@ -244,7 +243,7 @@ int stcm2l_file::make_entities()
             }
             it = te->set_convo(it, &actions);
             texts.push_back(te);
-        }else if(opcode == 0xe7){
+        }else if( opcode == ACTION_CHOICE ){
             text_entity* te = new text_entity;
             it = te->set_answer(it);
             texts.push_back(te);

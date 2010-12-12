@@ -43,6 +43,10 @@ or implied, of Matthias Lanzinger.
 #define OFFSET_EXPORT_ADDR      0x20
 #define SIZE_EXPORT             0x28
 
+#define ACTION_NAME             0xD2
+#define ACTION_TEXT             0xD4
+#define ACTION_CHOICE           0xE7
+
 using namespace std;
 
 

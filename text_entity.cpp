@@ -51,9 +51,9 @@ action_it text_entity::set_convo(action_it it, list<action*> *actions)
     this->actions = actions;
     uint32_t opcode = (*it)->get_opcode();
     old_addr = (*it)->get_old_addr();
-    while(opcode == 0xd2 || opcode == 0xd4){
+    while( opcode == ACTION_NAME || opcode == ACTION_TEXT ){
         
-        if(opcode==0xd4){
+        if( opcode==ACTION_TEXT ){
             if(name_utf8==NULL){
                 char* name;
                 int len = (*it)->get_string_from_param(&name, 0);
