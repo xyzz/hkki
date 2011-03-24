@@ -27,6 +27,7 @@ or implied, of Matthias Lanzinger.
 */
 
 #include "stcm2l_file.h"
+#include "compress.h"
 
 int stcm2l_file::set_addresses(int startaddr)
 {
@@ -152,7 +153,14 @@ void stcm2l_file::cleanup()
 
 int stcm2l_file::load_file(const char* infname)
 {
-    inf = fopen(infname, "rb");
+    static char* directory = "/tmp";
+    static char* prefix = "tmgs3dit";
+    char* tmpfname;
+
+    tmpfname = tempnam(directory, prefix);
+    decompress((char*)infname, tmpfname);
+
+    inf = fopen(tmpfname, "rb");
     if(inf==NULL){
         perror("inf:");
         return 1;
@@ -350,8 +358,13 @@ void stcm2l_file::sync_texts()
 int stcm2l_file::write(const char* ofname)
 {
     int new_export_start;
-        
-    FILE* of = fopen(ofname, "wb");
+    static const char* directory = "/tmp";
+    static const char* prefix = "hkki";
+    char* tmpfname;
+    FILE* of;
+
+    tmpfname = tempnam(directory, prefix);
+    of = fopen(tmpfname, "wb");
     if(of==NULL){
         perror("opening output:");
         return 1;
@@ -366,6 +379,8 @@ int stcm2l_file::write(const char* ofname)
     exports_write(of);
         
     fclose(of);
+
+    compress(tmpfname, (char*)ofname);
     return 0;
 }
     
