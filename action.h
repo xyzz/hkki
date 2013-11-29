@@ -53,7 +53,8 @@ using namespace std;
 class action
 {
   private:
-    int length, paramcount, old_addr, addr, localpcount;
+    int length, paramcount, localpcount;
+    uint32_t old_addr, addr;
     uint32_t opcode, is_local_call;
     uint8_t* extra_data, extra_data_len;
     vector<parameter*> params;

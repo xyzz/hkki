@@ -193,12 +193,14 @@ int action::set_string(char* str, int param)
 
 int action::get_string_from_param(char** target, int param)
 {
-    int offset = params[param]->relative_addr - 16-paramcount*12;
+    if( extra_data_len == 0 ) 
+        return 0;
+    int offset = params[param]->relative_addr - 16-paramcount*12; 
     uint8_t* stringdata = &extra_data[offset];
     int* intdata = (int*)stringdata;
-    
     int len = intdata[3];
-    
+
+
     *target = (char*)malloc(len);
     if(*target==NULL){
         perror("get_string_from_param malloc failed");

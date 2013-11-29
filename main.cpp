@@ -139,9 +139,12 @@ on_open_button_clicked(GtkButton* button,
         file->read_start();
         file->read_exports();
         file->read_actions();
-        
+
+        printf("make ents\n");
         file->make_entities();
+        printf("fill liststore\n");
         file->fill_liststore();
+        printf("done all\n");
     }
 end_open:
     g_free (filename);

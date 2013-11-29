@@ -153,14 +153,15 @@ void stcm2l_file::cleanup()
 
 int stcm2l_file::load_file(const char* infname)
 {
-    static char* directory = "/tmp";
-    static char* prefix = "tmgs3dit";
-    char* tmpfname;
+    // static char* directory = "/tmp";
+    // static char* prefix = "tmgs3dit";
+    // char* tmpfname;
 
-    tmpfname = tempnam(directory, prefix);
-    decompress((char*)infname, tmpfname);
+    // tmpfname = tempnam(directory, prefix);
+    //decompress((char*)infname, tmpfname);
 
-    inf = fopen(tmpfname, "rb");
+    //    inf = fopen(tmpfname, "rb");
+    inf = fopen(infname, "rb");
     if(inf==NULL){
         perror("inf:");
         return 1;
@@ -234,7 +235,7 @@ int stcm2l_file::read_actions()
     
     recover_global_calls(start);
     
-    printf("Have %d actions\n", actions.size());
+    printf("Have %ld actions\n", actions.size());
     return 0;
 }
     
@@ -243,6 +244,8 @@ int stcm2l_file::make_entities()
     list<action*>::iterator it;
     for(it=actions.begin(); it!=actions.end(); ++it){
         uint32_t opcode = (*it)->get_opcode();
+        
+       
         if( ( opcode == ACTION_NAME || opcode == ACTION_TEXT ) 
                 && (*it)->has_extra_data()){
             text_entity* te = new text_entity;
@@ -257,7 +260,7 @@ int stcm2l_file::make_entities()
             texts.push_back(te);
         }
     }
-    printf("got %d texts\n", texts.size());
+    printf("got %ld texts\n", texts.size());
     return texts.size();
 }
 
@@ -318,7 +321,6 @@ void stcm2l_file::selected_text(int index)
     
     clear_editstore();
     for(int i=0; i<linecount; ++i){
-        int width;
         gchar* line = texts[index]->get_line_utf8(i);
         
         gtk_list_store_append(editstore, &tree_it);
@@ -358,13 +360,13 @@ void stcm2l_file::sync_texts()
 int stcm2l_file::write(const char* ofname)
 {
     int new_export_start;
-    static const char* directory = "/tmp";
-    static const char* prefix = "hkki";
-    char* tmpfname;
+    // static const char* directory = "/tmp";
+    // static const char* prefix = "hkki";
+    // char* tmpfname;
     FILE* of;
 
-    tmpfname = tempnam(directory, prefix);
-    of = fopen(tmpfname, "wb");
+    //    tmpfname = tempnam(directory, prefix);
+    of = fopen(ofname, "wb");
     if(of==NULL){
         perror("opening output:");
         return 1;
@@ -380,7 +382,7 @@ int stcm2l_file::write(const char* ofname)
         
     fclose(of);
 
-    compress(tmpfname, (char*)ofname);
+    //    compress(tmpfname, (char*)ofname);
     return 0;
 }
     

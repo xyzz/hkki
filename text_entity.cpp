@@ -89,6 +89,7 @@ action_it text_entity::set_answer(action_it it)
     char *tmp;
     gchar* tmp_utf8;
     int len = (*it)->get_string_from_param(&tmp, 0);
+    printf("len: %d, string: %s\n", len, tmp);
     tmp_utf8 = g_convert((char*)tmp, len, "UTF-8", "shift_JIS",
                                 NULL, NULL, NULL);
     lines_utf8.push_back(tmp_utf8);
