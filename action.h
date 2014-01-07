@@ -56,7 +56,8 @@ class action
     int length, paramcount, localpcount;
     uint32_t old_addr, addr;
     uint32_t opcode, is_local_call;
-    uint8_t* extra_data, extra_data_len;
+    uint8_t* extra_data;
+    uint32_t extra_data_len;
     vector<parameter*> params;
     
   public:    
